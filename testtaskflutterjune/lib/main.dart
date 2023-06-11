@@ -1,115 +1,183 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testtaskflutterjune/ui/pages/mainpage.dart';
+
+import 'blocs/bottom_nav/bottomnavbloc.dart';
+import 'blocs/bottom_nav/bottomnavevent.dart';
+import 'blocs/bottom_nav/bottomnavstate.dart';
+import 'repositories/cartpagerepository.dart';
+import 'repositories/mainpagerepository.dart';
+import 'ui/pages/cartpage.dart';
 
 void main() {
-  runApp(const MyApp());
+  Bloc.observer = const AppBlocObserver();
+  runApp(const Application());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// {@template app_bloc_observer}
+/// Custom [BlocObserver] that observes all bloc and cubit state changes.
+/// {@endtemplate}
+class AppBlocObserver extends BlocObserver {
+  /// {@macro app_bloc_observer}
+  const AppBlocObserver();
 
-  // This widget is the root of your application.
+  @override
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+    super.onChange(bloc, change);
+    if (bloc is Cubit) print(change);
+  }
+
+  @override
+  void onTransition(
+    Bloc<dynamic, dynamic> bloc,
+    Transition<dynamic, dynamic> transition,
+  ) {
+    super.onTransition(bloc, transition);
+    print(transition);
+  }
+
+  @override
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    super.onError(bloc, error, stackTrace);
+    print(error.toString());
+  }
+
+  @override
+  void onEvent(Bloc<dynamic, dynamic> bloc, Object? event) {
+    super.onEvent(bloc, event);
+    debugPrint(event.toString());
+  }
+}
+
+class Application extends StatelessWidget {
+  const Application({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: const ColorScheme(
+            brightness: Brightness.light,
+            primary: Color.fromARGB(255, 51, 100, 224),
+            onPrimary: Colors.white,
+            secondary: Colors.white,
+            onSecondary: Color.fromARGB(255, 165, 169, 178),
+            background: Colors.white,
+            onBackground: Colors.black,
+            error: Colors.black,
+            onError: Colors.red,
+            onSurface: Colors.black,
+            surface: Color.fromARGB(255, 248, 247, 245),
+          ),
+          fontFamily: 'SF UI Display',
+          textTheme: const TextTheme(
+            headlineLarge: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.normal,
+                fontSize: 20),
+            headlineMedium: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.normal,
+                fontSize: 18),
+            headlineSmall: TextStyle(
+                color: Color.fromARGB(128, 0, 0, 0),
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.normal,
+                fontSize: 14),
+          ),
+        ),
+        home: BlocProvider<BottomNavBloc>(
+          create: (context) => BottomNavBloc(
+            firstPageRepository: MainPageRepository(),
+            secondPageRepository: CartPageRepository(),
+          )..add(AppStarted(index: -1)),
+          child: const HomePage(),
+        ));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final BottomNavBloc bottomNavigationBloc =
+        BlocProvider.of<BottomNavBloc>(context);
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        actions: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            width: 58,
+            child: const CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "https://4.bp.blogspot.com/-Jx21kNqFSTU/UXemtqPhZCI/AAAAAAAAh74/BMGSzpU6F48/s1600/funny-cat-pictures-047-001.jpg")),
+          ),
+        ],
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Align(
+                alignment: Alignment.topCenter,
+                child: Icon(Icons.location_on_outlined)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Санкт-Петербург",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Text(
+                  "12 августа, 2023",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ],
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: BlocBuilder<BottomNavBloc, BottomNavState>(
+        //bloc: bottomNavigationBloc,
+        builder: (BuildContext context, BottomNavState state) {
+          if (state is PageLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is MainPageLoaded) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+              child: MainPage(categories: state.categories),
+            );
+          }
+          if (state is CartPageLoaded) {
+            return CartPage();
+          }
+          return Container();
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<BottomNavBloc, BottomNavState>(
+          //bloc: bottomNavigationBloc,
+          builder: (BuildContext context, BottomNavState state) {
+        return BottomNavigationBar(
+          currentIndex: bottomNavigationBloc.currentIndex,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.black),
+              label: 'First',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.all_inclusive, color: Colors.black),
+              label: 'Second',
+            ),
+          ],
+          onTap: (index) => bottomNavigationBloc.add(PageTapped(index: index)),
+        );
+      }),
     );
   }
 }
