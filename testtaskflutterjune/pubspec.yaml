@@ -43,6 +43,7 @@ dependencies:
   json_annotation: ^4.8.0
   retrofit_generator: '>=5.0.0 <6.0.0'
   logger: ^1.4.0
+  bloc_concurrency: ^0.2.2
 
 dev_dependencies:
   flutter_test:

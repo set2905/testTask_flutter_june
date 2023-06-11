@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:testtaskflutterjune/repositories/cartpagerepository.dart';
 import 'package:testtaskflutterjune/repositories/models/category.dart';
 
@@ -18,22 +19,26 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       : super(const PageLoading()) {
     on<AppStarted>((event, emit) => add(PageTapped(index: currentIndex)));
     on<PageTapped>((event, emit) async {
-      emit(CurrentIndexChanged(event.index));
-      if (currentIndex == 0) {
+      currentIndex = event.index;
+      emit(CurrentIndexChanged(currentIndex));
+      if (event.index == 0) {
         var data = await _getMainPageData();
         emit(MainPageLoaded(data.categories));
       }
-      if (currentIndex == 1) {
+      if (event.index == 1) {
         String data = await _getCategoryPageData();
         emit(CartPageLoaded());
       }
-    });
+      //currentIndex = event.index;
+    }, transformer: restartable());
   }
 
   Future<CategoriesResponse> _getMainPageData() async {
     var data = firstPageRepository.data;
-    await firstPageRepository.fetchData();
-    data = firstPageRepository.data;
+    if (data.categories.isEmpty == true) {
+      await firstPageRepository.fetchData();
+      data = firstPageRepository.data;
+    }
     return data;
   }
 

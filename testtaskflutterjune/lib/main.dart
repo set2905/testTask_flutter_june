@@ -143,7 +143,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<BottomNavBloc, BottomNavState>(
-        //bloc: bottomNavigationBloc,
+        bloc: bottomNavigationBloc,
         builder: (BuildContext context, BottomNavState state) {
           if (state is PageLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -161,23 +161,27 @@ class HomePage extends StatelessWidget {
         },
       ),
       bottomNavigationBar: BlocBuilder<BottomNavBloc, BottomNavState>(
-          //bloc: bottomNavigationBloc,
+          bloc: bottomNavigationBloc,
           builder: (BuildContext context, BottomNavState state) {
-        return BottomNavigationBar(
-          currentIndex: bottomNavigationBloc.currentIndex,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.black),
-              label: 'First',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.all_inclusive, color: Colors.black),
-              label: 'Second',
-            ),
-          ],
-          onTap: (index) => bottomNavigationBloc.add(PageTapped(index: index)),
-        );
-      }),
+            
+              return BottomNavigationBar(
+                
+                currentIndex: bottomNavigationBloc.currentIndex,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home, color: Colors.black),
+                    label: 'First',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.all_inclusive, color: Colors.black),
+                    label: 'Second',
+                  ),
+                ],
+                onTap: (index) =>
+                    bottomNavigationBloc.add(PageTapped(index: index)),
+              );
+            
+          }),
     );
   }
 }

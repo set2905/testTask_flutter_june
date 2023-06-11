@@ -32,11 +32,13 @@ class MainPage extends StatelessWidget {
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 0, 0),
-                        child: Text(
-                          categories[index].name,
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
+                        padding: const EdgeInsets.fromLTRB(16, 12, 150, 0),
+
+                          child: Text(
+                            categories[index].name,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                      
                       ),
                     ),
                   ),
