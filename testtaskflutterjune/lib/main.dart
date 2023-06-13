@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartbloc.dart';
 import 'package:testtaskflutterjune/ui/pages/mainpage.dart';
 import 'package:testtaskflutterjune/ui/widgets/navbar.dart';
 
@@ -91,11 +92,18 @@ class Application extends StatelessWidget {
                 fontSize: 14),
           ),
         ),
-        home: BlocProvider<BottomNavBloc>(
-          create: (context) => BottomNavBloc(
-            firstPageRepository: MainPageRepository(),
-            secondPageRepository: CartPageRepository(),
-          )..add(AppStarted(index: -1)),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider<BottomNavBloc>(
+              create: (context) => BottomNavBloc(
+                firstPageRepository: MainPageRepository(),
+                secondPageRepository: CartPageRepository(),
+              )..add(AppStarted(index: -1)),
+            ),
+            BlocProvider(
+              create: (context) => CartBloc(),
+            ),
+          ],
           child: const HomePage(),
         ));
   }
@@ -108,8 +116,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottomNavBloc bottomNavigationBloc =
         BlocProvider.of<BottomNavBloc>(context);
+    final CartBloc cartBloc = BlocProvider.of<CartBloc>(context);
     return Scaffold(
-      backgroundColor:  Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
@@ -158,7 +167,7 @@ class HomePage extends StatelessWidget {
             );
           }
           if (state is CartPageLoaded) {
-            return CartPage();
+            return CartPage(cartBloc:cartBloc);
           }
           return Container();
         },
@@ -171,5 +180,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-

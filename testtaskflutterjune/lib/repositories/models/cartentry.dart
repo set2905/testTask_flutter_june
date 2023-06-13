@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'dish.dart';
-
 class CartEntry extends Equatable{
-  CartEntry(this.dish);
-  int count = 0;
+  const CartEntry(this.dish, this.count);
+  final int count;
   final Dish dish;
   
   @override

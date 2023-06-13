@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartbloc.dart';
 import 'package:testtaskflutterjune/blocs/dishes/dishesbloc.dart';
 import 'package:testtaskflutterjune/repositories/dishespagerepository.dart';
 import 'package:testtaskflutterjune/repositories/models/dish.dart';
@@ -13,14 +14,16 @@ import '../../blocs/dishes/dishesevent.dart';
 import '../widgets/navbar.dart';
 
 class DishesPage extends StatelessWidget {
-  const DishesPage({super.key, required this.bottomNavigationBloc});
+  const DishesPage(
+      {super.key, required this.bottomNavigationBloc, required this.cartBloc});
   final BottomNavBloc bottomNavigationBloc;
+  final CartBloc cartBloc;
   @override
   Widget build(BuildContext context) {
     return BlocListener<BottomNavBloc, BottomNavState>(
       bloc: bottomNavigationBloc,
       listener: (context, state) {
-        Navigator.pop(context);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       },
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -50,7 +53,9 @@ class DishesPage extends StatelessWidget {
             create: (context) => DishesBloc(
               dishesPageRepository: DishesPageRepository(),
             )..add(const DishesOpenedEvent(0)),
-            child: const DishesList(),
+            child: DishesList(
+              cartBloc: cartBloc,
+            ),
           )),
     );
   }

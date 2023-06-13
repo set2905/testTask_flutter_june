@@ -26,8 +26,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         emit(MainPageLoaded(data.categories));
       }
       if (event.index == 2) {
-        String data = await _getCategoryPageData();
-        emit(CartPageLoaded());
+        emit(const CartPageLoaded());
       }
       //currentIndex = event.index;
     }, transformer: restartable());
@@ -39,13 +38,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       await firstPageRepository.fetchData();
       data = firstPageRepository.data;
     }
-    return data;
-  }
-
-  Future<String> _getCategoryPageData() async {
-    String data = secondPageRepository.data;
-    await secondPageRepository.fetchData();
-    data = secondPageRepository.data;
     return data;
   }
 }

@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartbloc.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartevent.dart';
 import 'package:testtaskflutterjune/blocs/dishes/dishesbloc.dart';
 import 'package:testtaskflutterjune/blocs/dishes/dishesstate.dart';
 
 import '../../blocs/dishes/dishesevent.dart';
+import '../../repositories/models/dish.dart';
+import 'dishinfowidget.dart';
 
 class DishesList extends StatelessWidget {
-  const DishesList({super.key});
-
+  const DishesList({super.key, required this.cartBloc});
+  final CartBloc cartBloc;
   @override
   Widget build(BuildContext context) {
     final DishesBloc dishesBloc = BlocProvider.of<DishesBloc>(context);
@@ -83,7 +87,7 @@ class DishesList extends StatelessWidget {
                               InkWell(
                                 onTap: () async {
                                   await _displayDishDialog(
-                                      context, index, state);
+                                      context, index, state, cartBloc);
                                 },
                                 child: Container(
                                   height: 119,
@@ -133,8 +137,8 @@ class DishesList extends StatelessWidget {
     );
   }
 
-  Future<void> _displayDishDialog(
-      BuildContext context, int index, DishesPageLoaded state) async {
+  Future<void> _displayDishDialog(BuildContext context, int index,
+      DishesPageLoaded state, CartBloc cartBloc) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -164,28 +168,10 @@ class DishesList extends StatelessWidget {
                   )
                 ]),
               ),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      state.data.dishes[index].name,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  )),
-              Row(
-                children: [
-                  Text(
-                    "${state.data.dishes[index].price} ₽",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.apply(color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                  Text(" · ${state.data.dishes[index].weight}г",
-                      style: Theme.of(context).textTheme.headlineSmall?.apply(
-                          color: Theme.of(context).colorScheme.onSecondary))
-                ],
+              DishInfoWidget(
+                dish: state.data.dishes[index],
+                nameStyle: Theme.of(context).textTheme.headlineMedium!,
+                priceAndWeightStyle: Theme.of(context).textTheme.headlineSmall!,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -198,6 +184,7 @@ class DishesList extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () {
+                    cartBloc.add(CartEntryAddedEvent(state.data.dishes[index]));
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -222,6 +209,8 @@ class DishesList extends StatelessWidget {
     );
   }
 }
+
+
 
 Widget _popupSecondaryButton(
     BuildContext buildContext, Icon icon, Function onPressed) {

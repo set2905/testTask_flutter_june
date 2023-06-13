@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartbloc.dart';
 import 'package:testtaskflutterjune/ui/pages/dishespage.dart';
 
 import '../../blocs/bottom_nav/bottomnavbloc.dart';
@@ -13,6 +14,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottomNavBloc bottomNavigationBloc =
         BlocProvider.of<BottomNavBloc>(context);
+    final CartBloc cartBloc = BlocProvider.of<CartBloc>(context);
     return Scaffold(
       body: Center(
           child: ListView.builder(
@@ -29,7 +31,9 @@ class MainPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DishesPage(
-                                  bottomNavigationBloc: bottomNavigationBloc)));
+                                    bottomNavigationBloc: bottomNavigationBloc,
+                                    cartBloc: cartBloc,
+                                  )));
                     },
                     child: Container(
                       width: 381,
