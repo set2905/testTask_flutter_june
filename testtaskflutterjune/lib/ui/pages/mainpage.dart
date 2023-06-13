@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testtaskflutterjune/ui/pages/dishespage.dart';
 
+import '../../blocs/bottom_nav/bottomnavbloc.dart';
 import '../../repositories/models/category.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key, required this.categories});
   final List<Category> categories;
+
   @override
   Widget build(BuildContext context) {
+    final BottomNavBloc bottomNavigationBloc =
+        BlocProvider.of<BottomNavBloc>(context);
     return Scaffold(
       body: Center(
           child: ListView.builder(
@@ -23,7 +28,8 @@ class MainPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const DishesPage()));
+                              builder: (context) => DishesPage(
+                                  bottomNavigationBloc: bottomNavigationBloc)));
                     },
                     child: Container(
                       width: 381,
