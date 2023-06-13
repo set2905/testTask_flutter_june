@@ -13,6 +13,8 @@ abstract class CartState extends Equatable {
 class CartWithItemsState extends CartState {
   const CartWithItemsState(super.entries, this.total);
   final int total;
+   @override
+  List<Object?> get props => [entries, total];
 }
 
 class CartEmptyState extends CartState {

@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dish.g.dart';
 
 @JsonSerializable()
-class Dish {
+class Dish extends Equatable {
   int id;
   String name;
   @JsonKey(name: "image_url")
@@ -18,6 +19,9 @@ class Dish {
   factory Dish.fromJson(Map<String, dynamic> json) =>
       _$DishFromJson(json);
   Map<String, dynamic> toJson() => _$DishToJson(this);
+  
+  @override
+  List<Object?> get props => [id];
 }
 
 

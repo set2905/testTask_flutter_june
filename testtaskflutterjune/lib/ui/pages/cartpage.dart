@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testtaskflutterjune/blocs/cart/cartbloc.dart';
+import 'package:testtaskflutterjune/blocs/cart/cartevent.dart';
 import 'package:testtaskflutterjune/blocs/cart/cartstate.dart';
 import 'package:testtaskflutterjune/ui/widgets/dishinfowidget.dart';
 
@@ -30,38 +31,88 @@ class CartPage extends StatelessWidget {
                           height: 64,
                           width: double.infinity,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Row(
+                                children: [
+                                  Container(
+                                      height: double.infinity,
+                                      width: 62,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surface),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: url.isNotEmpty
+                                            ? Image.network(url)
+                                            : null,
+                                      )),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: SizedBox(
+                                      width: 119,
+                                      child: DishInfoWidget(
+                                        dish: state.entries[index].dish,
+                                        nameStyle: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall!
+                                            .apply(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface),
+                                        priceAndWeightStyle: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall!,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                               Container(
-                                  height: double.infinity,
-                                  width: 62,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: url.isNotEmpty
-                                        ? Image.network(url)
-                                        : null,
-                                  )),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8,0,0,0),
-                                child: SizedBox(
-                                  width: 109,
-                                  child: DishInfoWidget(
-                                    dish: state.entries[index].dish,
-                                    nameStyle: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .apply(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                                    priceAndWeightStyle:
-                                        Theme.of(context).textTheme.headlineSmall!,
-                                  ),
-                                ),
+                                height: 32,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        Theme.of(context).colorScheme.surface),
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            if (state.entries[index].count == 1) {
+                                              cartBloc.add(
+                                                  CartEntryRemovedEvent(state
+                                                      .entries[index].dish));
+                                              return;
+                                            }
+                                            cartBloc.add(
+                                                CartEntryCountChangeEvent(
+                                                    state.entries[index].dish,
+                                                    -1));
+                                          },
+                                          icon: Icon(Icons.remove)),
+                                      Text(
+                                        state.entries[index].count.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium,
+                                      ),
+                                      IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            cartBloc.add(
+                                                CartEntryCountChangeEvent(
+                                                    state.entries[index].dish,
+                                                    1));
+                                          },
+                                          icon: Icon(Icons.add))
+                                    ]),
                               )
                             ],
                           ),
@@ -73,9 +124,7 @@ class CartPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: () {},
                       child: Container(
                         height: 48,
                         width: double.infinity,

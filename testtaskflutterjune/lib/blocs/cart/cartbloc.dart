@@ -10,7 +10,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (currentCartItems.map((e) => e.dish).contains(event.dish)) {
         var found = currentCartItems
             .firstWhere((element) => element.dish == event.dish);
-        found = CartEntry(found.dish, found.count + event.change);
+        currentCartItems[currentCartItems.indexOf(found)] =
+            CartEntry(found.dish, found.count + event.change);
       }
       emit(CartWithItemsState(currentCartItems, _getTotal()));
     });
@@ -19,7 +20,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (currentCartItems.map((e) => e.dish).contains(event.dish)) {
         currentCartItems.removeWhere((e) => e.dish == event.dish);
       }
-      emit(CartWithItemsState(currentCartItems, _getTotal()));
+      if (currentCartItems.isNotEmpty) {
+        emit(CartWithItemsState(currentCartItems, _getTotal()));
+      } else {
+        emit(CartEmptyState());
+      }
     });
 
     on<CartEntryAddedEvent>(((event, emit) {
