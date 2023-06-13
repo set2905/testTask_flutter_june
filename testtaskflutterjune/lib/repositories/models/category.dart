@@ -6,8 +6,9 @@ part 'category.g.dart';
 class Category {
   int id;
   String name;
-  String image_url;
-  Category(this.id, this.name, this.image_url);
+  @JsonKey(name: "image_url")
+  String imageurl;
+  Category(this.id, this.name, this.imageurl);
 
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
@@ -16,7 +17,7 @@ class Category {
 
 @JsonSerializable()
 class CategoriesResponse {
-  //Ловушка Джокера... Нахуя???
+  @JsonKey(name: "сategories")
   List<Category> categories;
   CategoriesResponse(this.categories);
 

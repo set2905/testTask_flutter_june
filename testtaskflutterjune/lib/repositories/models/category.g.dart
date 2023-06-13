@@ -15,7 +15,7 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'image_url': instance.image_url,
+      'image_url': instance.imageurl,
     };
 
 CategoriesResponse _$CategoriesResponseFromJson(Map<String, dynamic> json) =>
@@ -27,5 +27,5 @@ CategoriesResponse _$CategoriesResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$CategoriesResponseToJson(CategoriesResponse instance) =>
     <String, dynamic>{
-      'categories': instance.categories,
+      'сategories': instance.categories,
     };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:testtaskflutterjune/ui/pages/mainpage.dart';
 
 import 'blocs/bottom_nav/bottomnavbloc.dart';
@@ -107,6 +108,7 @@ class HomePage extends StatelessWidget {
     final BottomNavBloc bottomNavigationBloc =
         BlocProvider.of<BottomNavBloc>(context);
     return Scaffold(
+      backgroundColor:  Theme.of(context).colorScheme.background,
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
@@ -117,7 +119,7 @@ class HomePage extends StatelessWidget {
             width: 58,
             child: const CircleAvatar(
                 backgroundImage: NetworkImage(
-                    "https://4.bp.blogspot.com/-Jx21kNqFSTU/UXemtqPhZCI/AAAAAAAAh74/BMGSzpU6F48/s1600/funny-cat-pictures-047-001.jpg")),
+                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png")),
           ),
         ],
         title: Row(
@@ -163,24 +165,47 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: BlocBuilder<BottomNavBloc, BottomNavState>(
           bloc: bottomNavigationBloc,
           builder: (BuildContext context, BottomNavState state) {
-            
-              return BottomNavigationBar(
-                
-                currentIndex: bottomNavigationBloc.currentIndex,
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home, color: Colors.black),
-                    label: 'First',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.all_inclusive, color: Colors.black),
-                    label: 'Second',
-                  ),
-                ],
-                onTap: (index) =>
-                    bottomNavigationBloc.add(PageTapped(index: index)),
-              );
-            
+            return BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
+              unselectedItemColor: Theme.of(context).colorScheme.onSecondary,
+              currentIndex: bottomNavigationBloc.currentIndex,
+              showUnselectedLabels: true,
+              showSelectedLabels: true,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: SvgPicture.asset('assets/images/home.svg',
+                        color: bottomNavigationBloc.currentIndex == 0
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSecondary),
+                    label: 'Главная'),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset('assets/images/search.svg',
+                  color: bottomNavigationBloc.currentIndex == 1
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSecondary),
+                  label: 'Поиск',
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset('assets/images/cart.svg',
+                  color: bottomNavigationBloc.currentIndex == 2
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSecondary),
+                  label: 'Корзина',
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset('assets/images/account.svg',
+                  color: bottomNavigationBloc.currentIndex == 3
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSecondary),
+                  label: 'Аккаунт',
+                ),
+              ],
+              onTap: (index) =>
+                  bottomNavigationBloc.add(PageTapped(index: index)),
+            );
           }),
     );
   }

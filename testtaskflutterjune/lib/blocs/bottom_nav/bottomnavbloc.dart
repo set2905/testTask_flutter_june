@@ -25,7 +25,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         var data = await _getMainPageData();
         emit(MainPageLoaded(data.categories));
       }
-      if (event.index == 1) {
+      if (event.index == 2) {
         String data = await _getCategoryPageData();
         emit(CartPageLoaded());
       }

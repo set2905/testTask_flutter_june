@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testtaskflutterjune/ui/pages/dishespage.dart';
 
 import '../../repositories/models/category.dart';
 
@@ -19,26 +20,27 @@ class MainPage extends StatelessWidget {
                   clipBehavior: Clip.hardEdge,
                   child: InkWell(
                     onTap: () {
-                      debugPrint('Card tapped.');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DishesPage()));
                     },
                     child: Container(
                       width: 381,
                       height: 164,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(categories[index].image_url),
+                          image: NetworkImage(categories[index].imageurl),
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                         ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(16, 12, 150, 0),
-
-                          child: Text(
-                            categories[index].name,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                      
+                        child: Text(
+                          categories[index].name,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
                       ),
                     ),
                   ),
