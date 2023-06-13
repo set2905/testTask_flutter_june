@@ -4,7 +4,6 @@ import '../../repositories/models/dish.dart';
 
 abstract class DishesEvent extends Equatable {
   final int selectedTagIndex;
-  //final List<Dish> dishes;
   const DishesEvent(this.selectedTagIndex);
 }
 

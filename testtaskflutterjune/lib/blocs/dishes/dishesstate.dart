@@ -20,7 +20,6 @@ class DishesPageLoaded extends DishesState {
 
 class DishesPageLoading extends DishesState {
   const DishesPageLoading(super.selectedTagIndex);
-
   @override
   String toString() => 'DishesPageLoading';
 }

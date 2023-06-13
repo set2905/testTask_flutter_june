@@ -142,73 +142,102 @@ class DishesList extends StatelessWidget {
             ? ""
             : state.data.dishes[index].imageurl!;
         return AlertDialog(
-           shape: const RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            width: 311,
-            height: 232,
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(10)),
-            child: Stack(children: [Center(child: Image.network(url))]),
-          ),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  state.data.dishes[index].name,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-              )),
-          Row(
-            children: [
-              Text(
-                "${state.data.dishes[index].price} ₽",
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.apply(color: Theme.of(context).colorScheme.onSurface),
-              ),
-              Text(" · ${state.data.dishes[index].weight}г",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.apply(color: Theme.of(context).colorScheme.onSecondary))
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: SizedBox(
-              height: 62,
-              child: Text(state.data.dishes[index].description,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  overflow: TextOverflow.clip),
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                height: 48,
-                width: double.infinity,
+              Container(
+                width: 311,
+                height: 232,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(10)),
-                child: Center(
-                  child: Text(
-                    "Добавить в корзину",
+                child: Stack(children: [
+                  Center(child: url.isNotEmpty ? Image.network(url) : null),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _popupSecondaryButton(
+                          context, const Icon(Icons.favorite_border), () {}),
+                      _popupSecondaryButton(context, const Icon(Icons.close),
+                          () => Navigator.pop(context))
+                    ],
+                  )
+                ]),
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      state.data.dishes[index].name,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  )),
+              Row(
+                children: [
+                  Text(
+                    "${state.data.dishes[index].price} ₽",
                     style: Theme.of(context)
                         .textTheme
-                        .headlineMedium
-                        ?.apply(color: Theme.of(context).colorScheme.onPrimary),
+                        .headlineSmall
+                        ?.apply(color: Theme.of(context).colorScheme.onSurface),
                   ),
+                  Text(" · ${state.data.dishes[index].weight}г",
+                      style: Theme.of(context).textTheme.headlineSmall?.apply(
+                          color: Theme.of(context).colorScheme.onSecondary))
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: SizedBox(
+                  height: 62,
+                  child: Text(state.data.dishes[index].description,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      overflow: TextOverflow.clip),
                 ),
-              ))
-        ]));
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 48,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        "Добавить в корзину",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.apply(
+                                color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    ),
+                  ))
+            ]));
       },
     );
   }
+}
+
+Widget _popupSecondaryButton(
+    BuildContext buildContext, Icon icon, Function onPressed) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+    child: InkWell(
+        onTap: () {
+          onPressed();
+        },
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+              color: Theme.of(buildContext).colorScheme.background,
+              borderRadius: BorderRadius.circular(10)),
+          child: Center(child: icon),
+        )),
+  );
 }
